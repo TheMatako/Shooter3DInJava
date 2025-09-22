@@ -15,6 +15,7 @@ public class Map {
 	
 	// Parameters of the map
 	private float mapSize = 50f; // Size of the ground = 50x50 units
+	private int gridLines = 25;
 	
 	public Map(SimpleApplication app) {
 		this.app = app;
@@ -26,7 +27,6 @@ public class Map {
 	 */
 	public void loadMap() {
 		createGround();
-		
 		// Attach the map node to the rootNode
 		app.getRootNode().attachChild(mapNode);
 	}
@@ -50,6 +50,7 @@ public class Map {
 		// Attach ground to map node
 		mapNode.attachChild(groundGeometry);
 	}
+
 	
 	/* 
 	 * Delete all map elements
@@ -80,5 +81,20 @@ public class Map {
 	 */
 	public Vector3f getPlayerSpawnPosition() {
 		return new Vector3f(0, 2f, 0);
+	}
+	
+	/* 
+	 * Verify if a position is in the map
+	 */
+	public boolean isPositionValid(Vector3f position, float playerWidth) {
+		return position.x >= (playerWidth - mapSize) / 2 && position.x <= (mapSize - playerWidth) / 2 && 
+				position.z >= (playerWidth - mapSize) / 2 && position.z <= (mapSize - playerWidth) / 2;
+	}
+	
+	/* 
+	 * Return ground height (for the collisions)
+	 */
+	public float getGroundHeight() {
+		return 0f;
 	}
 }

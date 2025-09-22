@@ -1,6 +1,7 @@
 package com.mygame.states;
 
 import com.mygame.world.Map;
+import com.mygame.entities.Player;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -19,6 +20,7 @@ public class GameState extends AbstractAppState implements ActionListener {
 	
 	private SimpleApplication app;
 	private Map gameMap;
+	private Player player;
 	
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
@@ -33,6 +35,8 @@ public class GameState extends AbstractAppState implements ActionListener {
 		gameMap = new Map(this.app);
 		gameMap.loadMap();
 		
+		// Create player
+		player = new Player(this.app, gameMap);
 		// Position camera at spawn position
 		Vector3f spawnPos = gameMap.getPlayerSpawnPosition();
 		this.app.getCamera().setLocation(spawnPos);
@@ -73,6 +77,17 @@ public class GameState extends AbstractAppState implements ActionListener {
 			gameMap.unloadMap();
 		}
 		
+		// Unload player
+		if (player != null) {
+			player.cleanup();
+		}
+		
 		app.getRootNode().detachAllChildren();
+	}
+	
+	public void update(float tpf) {
+		if (player != null) {
+			player.update(tpf);
+		}
 	}
 }
