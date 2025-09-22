@@ -1,10 +1,13 @@
 package com.mygame;
 
+import com.mygame.states.MenuState;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+
 
 public class Shooter3D extends SimpleApplication {
 	
@@ -13,22 +16,14 @@ public class Shooter3D extends SimpleApplication {
 		
 		app.start();
 	}
-	
+
 	@Override 
 	public void simpleInitApp() {
-		createTestCube();
-	}
-	
-	public void createTestCube() {
-		Box boxMesh = new Box(1f, 1f, 1f);
+		// Disable flymcam cursor
+		flyCam.setEnabled(false);
+		setDisplayStatView(false);
 		
-		Geometry boxGeometry = new Geometry("Test Cube", boxMesh);
-		
-		Material boxMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		boxMaterial.setColor("Color",  ColorRGBA.Blue);
-		
-		boxGeometry.setMaterial(boxMaterial);
-		
-		rootNode.attachChild(boxGeometry);
+		MenuState menuState = new MenuState();
+		stateManager.attach(menuState);
 	}
 }
