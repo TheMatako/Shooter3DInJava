@@ -26,17 +26,19 @@ dependencies {
     
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+
+    
 }
 
 application {
     // Ta classe principale
-    mainClass.set("shooter3D.Shooter3D")
+    mainClass.set("com.mygame.Shooter3D")
 }
 
 // Java 25
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
