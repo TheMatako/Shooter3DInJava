@@ -104,7 +104,7 @@ public class MenuState extends AbstractAppState implements ActionListener  {
 	
 	private void startGame() {
 		// Disable menu
-		setEnabled(false);
+		cleanup();
 		// Create and activate game state
 		GameState gameState = new GameState();
 		app.getStateManager().attach(gameState);

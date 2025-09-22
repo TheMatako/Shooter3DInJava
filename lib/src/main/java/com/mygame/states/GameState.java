@@ -1,5 +1,7 @@
 package com.mygame.states;
 
+import com.mygame.world.Map;
+
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -9,12 +11,14 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 
 public class GameState extends AbstractAppState implements ActionListener {
 	
 	private SimpleApplication app;
+	private Map gameMap;
 	
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
@@ -25,19 +29,13 @@ public class GameState extends AbstractAppState implements ActionListener {
 		// initialize inputs
 		setupInputs();
 		
-		// initialize game
-		createTestCube();
-	}
-	
-	public void createTestCube() {
-        Box boxMesh = new Box(1f, 1f, 1f);
-        Geometry boxGeometry = new Geometry("Test Cube", boxMesh);
-        
-        Material boxMaterial = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        boxMaterial.setColor("Color", ColorRGBA.Blue);
-        
-        boxGeometry.setMaterial(boxMaterial);
-        app.getRootNode().attachChild(boxGeometry);
+		// Create and load map
+		gameMap = new Map(this.app);
+		gameMap.loadMap();
+		
+		// Position camera at spawn position
+		Vector3f spawnPos = gameMap.getPlayerSpawnPosition();
+		this.app.getCamera().setLocation(spawnPos);
 	}
 	
 	
@@ -69,6 +67,11 @@ public class GameState extends AbstractAppState implements ActionListener {
 		
 		app.getInputManager().deleteMapping("Return to Menu");
 		app.getInputManager().removeListener(this);
+		
+		// Unload map
+		if (gameMap != null) {
+			gameMap.unloadMap();
+		}
 		
 		app.getRootNode().detachAllChildren();
 	}
