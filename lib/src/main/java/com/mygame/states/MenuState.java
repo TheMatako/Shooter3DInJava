@@ -39,7 +39,8 @@ public class MenuState extends AbstractAppState implements ActionListener  {
 	public void initializeMenu() {
 		// Load default font
 		guiFont = app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
-		
+
+		app.getInputManager().setCursorVisible(true);
 		// Create title
 		titleText = new BitmapText(guiFont);
 		titleText.setSize(guiFont.getCharSet().getRenderedSize() * 2);

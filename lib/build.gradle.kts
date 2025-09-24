@@ -21,6 +21,10 @@ dependencies {
     // Desktop support
     implementation("org.jmonkeyengine:jme3-desktop:3.6.1-stable")
     
+    // Bullet support
+    implementation("org.jmonkeyengine:jme3-bullet:3.3.2-stable")
+    implementation("org.jmonkeyengine:jme3-bullet-native:3.3.2-stable")
+    
     // Effets visuels (optionnel)
     implementation("org.jmonkeyengine:jme3-effects:3.6.1-stable")
     

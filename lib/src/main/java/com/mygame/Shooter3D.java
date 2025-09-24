@@ -13,7 +13,7 @@ public class Shooter3D extends SimpleApplication {
 		
 		AppSettings settings = new AppSettings(true);
 		settings.setTitle("Shooter 3D");
-		settings.setResolution(1280, 720);
+		settings.setResolution(1500, 900);
 		settings.setFullscreen(false);
 		settings.setVSync(true);
 		settings.setSamples(4);

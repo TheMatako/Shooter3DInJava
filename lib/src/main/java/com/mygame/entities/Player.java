@@ -123,7 +123,7 @@ public class Player implements ActionListener, AnalogListener {
 		if (moveStates[3]) movement.addLocal(right.mult(moveSpeed * tpf));
 		
 		// Apply gravity
-		velocity.y += gravity * tpf;
+		if (!isOnGround) velocity.y += gravity * tpf;
 		
 		// Calculate new position
 		Vector3f newPosition = position.add(movement).add(velocity.mult(tpf));
@@ -131,19 +131,24 @@ public class Player implements ActionListener, AnalogListener {
 		if (gameMap.isPositionValid(newPosition, playerWidth)) {
 			position.x = newPosition.x;
 			position.z = newPosition.z;
-		}
+			// Collisions with ground
+			float groundHeight = gameMap.getGroundHeightAt(newPosition) + playerHeight / 2;
+			if (newPosition.y <= groundHeight) {
+				if (newPosition.y >= groundHeight - 1f) {
+					position.y = groundHeight;
+				} else {
+					position.y = playerHeight / 2;
+				}
+				velocity.y = 0;
+				isOnGround = true;
+			} else {
+				position.y = newPosition.y;
+				isOnGround = false;
+			}
+			
+		} 
 		
-		// Collisions with ground
-		float groundHeight = gameMap.getGroundHeight() + playerHeight / 2;
-		if (newPosition.y <= groundHeight) {
-			position.y = groundHeight;
-			velocity.y = 0;
-			isOnGround = true;
-		} else {
-			position.y = newPosition.y;
-			isOnGround = false;
-		}
-		
+
 		updatePlayerPosition();
 		
 		// update camera to follow the player

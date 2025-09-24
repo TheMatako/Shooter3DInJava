@@ -10,11 +10,8 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
+
 
 public class GameState extends AbstractAppState implements ActionListener {
 	
@@ -26,7 +23,6 @@ public class GameState extends AbstractAppState implements ActionListener {
 	public void initialize(AppStateManager stateManager, Application app) {
 		super.initialize(stateManager, app);
 		this.app = (SimpleApplication) app;
-		this.app.getFlyByCamera().setEnabled(true);
 		
 		// initialize inputs
 		setupInputs();
@@ -37,30 +33,42 @@ public class GameState extends AbstractAppState implements ActionListener {
 		
 		// Create player
 		player = new Player(this.app, gameMap);
-		// Position camera at spawn position
 		Vector3f spawnPos = gameMap.getPlayerSpawnPosition();
+		player.setPosition(spawnPos.clone());
 		this.app.getCamera().setLocation(spawnPos);
 	}
 	
+	@Override
+	public void update(float tpf) {
+		super.update(tpf);
+		
+		// Update player
+		if (player != null) {
+			player.update(tpf);
+		}
+	}
 	
 	private void setupInputs() {
 		app.getInputManager().addMapping("Return to Menu", new KeyTrigger(KeyInput.KEY_RETURN));
-		app.getInputManager().addListener(this, "Return to Menu");
+		app.getInputManager().addMapping("Toogle Debug", new KeyTrigger(KeyInput.KEY_F1));
+		app.getInputManager().addListener(this, "Return to Menu", "Toggle Debug");
 	}
 	
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
 		if (name.equals("Return to Menu") && !isPressed) {
 			returnToMenu();
+		} else if (name.equals("Toggle Debug") && !isPressed) {
+			gameMap.setDebugMode(!gameMap.getMapObjects().isEmpty());
 		}
 	}
 	
 	private void returnToMenu() {
-		app.getFlyByCamera().setEnabled(false);
-		
+		// Disable this state
 		setEnabled(false);
 		app.getStateManager().detach(this);
 		
+		// Reactivate menu
 		MenuState menuState = new MenuState();
 		app.getStateManager().attach(menuState);
 	}
@@ -70,6 +78,7 @@ public class GameState extends AbstractAppState implements ActionListener {
 		super.cleanup();
 		
 		app.getInputManager().deleteMapping("Return to Menu");
+		app.getInputManager().deleteMapping("Toggle Debug");
 		app.getInputManager().removeListener(this);
 		
 		// Unload map
@@ -82,12 +91,9 @@ public class GameState extends AbstractAppState implements ActionListener {
 			player.cleanup();
 		}
 		
+		// Clean scene when we quit game
 		app.getRootNode().detachAllChildren();
 	}
 	
-	public void update(float tpf) {
-		if (player != null) {
-			player.update(tpf);
-		}
-	}
+
 }
